@@ -1,0 +1,48 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+<!--    using date format class-->
+<!--    <bean id="dateFormater" class="java.text.SimpleDateFormat">-->
+<!--        <constructor-arg value="yyyy-MM-dd"/>-->
+<!--    </bean>-->
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>employee.properties</value>
+        </property>
+    </bean>
+
+
+    <bean id="dateFormat" class = "org.example.model.DateFormatter" factory-method="dateFormatter">
+        <constructor-arg name="date" value="03-12-2020"/>
+        <constructor-arg name="pattern" value="MM-dd-yyyy"/>
+    </bean>
+
+    <bean id = "DepartmentBean" class="org.example.model.Department">
+        <constructor-arg name="name" value="${DepartmentName}"/>
+        <constructor-arg name="createdOn">
+            <ref bean="dateFormat"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="EmployeeBean" class="org.example.model.Employee" init-method="init" destroy-method="destroy">
+        <constructor-arg name="name" value="${EmployeeName}"/>
+        <constructor-arg name="age" value="${EmployeeAge}"/>
+        <constructor-arg name="salary" value="${EmployeeSalary}"/>
+        <constructor-arg name = "department">
+            <ref bean="DepartmentBean"/>
+        </constructor-arg>
+        <constructor-arg name="taskList">
+            <list>
+                <value>complete the work</value>
+                <value>submit the assignment</value>
+                <value>share the github link of project work</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+</beans>
